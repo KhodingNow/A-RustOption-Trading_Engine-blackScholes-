@@ -1,0 +1,14 @@
+[package]
+name = "rust-option-engine"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+statrs = "0.16"
+
+[dev-dependencies]
+criterion = "0.5"
+
+[[bench]]
+name = "pricing_bench"
+harness = false
