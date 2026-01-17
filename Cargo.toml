@@ -8,6 +8,7 @@ statrs = "0.16"
 
 [dev-dependencies]
 criterion = "0.5"
+proptest = "1.4"
 
 [[bench]]
 name = "pricing_bench"
