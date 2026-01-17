@@ -118,3 +118,92 @@ proptest! {
     }
     
 }
+
+proptest! {
+    #[test]
+    fn put_call_parity_holds(
+        spot in 50.0f64..150.0,
+        strike in 50.0f64..150.0,
+        
+    ) {
+
+        let r = Rate(0.05);
+        let vol = Volatility(0.2);
+        let t = TimeToMaturity(1.0);
+
+        let call = call_price(
+            Spot(spot),
+            Strike(strike),
+            r,
+            vol,
+            t,
+        );
+
+        let put = put_price(
+            Spot(spot),
+            Strike(strike),
+            r,
+            vol,
+            t,
+        );
+
+        let lhs = call - put;
+        let rhs = spot - strike * (-r.0 * t.0).exp();
+
+        let epsilon = 1e-8;
+
+        prop_assert!(
+            (lhs - rhs).abs() < epsilon,
+
+            "put-call parity violated: C-P={lhs}, S-Ke^(-rt)={rhs}"
+            
+        );
+    }
+     
+ }
+
+//Delta central - difference test
+
+proptest! {
+    #[test]
+    fn call_delta_is_between_zero_and_one (
+        spot in 60.0f64..140.0, 
+        strike in 50.0f64..150.0,
+        
+    ) {
+
+        let r = Rate(0.50);
+        let vol = Volatility(0.2);
+        let t = TimeToMaturity(1.0);
+
+
+        let epsilon = 1e-4; // finite-differnce step
+
+        let price_up = call_price(
+            Spot(spot + epsilon),
+            Strike(strike),
+            r,
+            vol,
+            t,              
+            
+        );
+
+        let price_down = call_price(
+            Spot(spot - epsilon),
+            Strike(strike),
+            r, 
+            vol,
+            t,
+        );   
+
+        let delta = (price_up - price_down) / (2.0 * epsilon);
+
+        prop_assert!(
+            delta >= -1e-6 && delta <= 1.0 + 1e-6,
+
+            "call delta out of bounds: delta={delta}"
+        );
+    }
+}
+
+ 
