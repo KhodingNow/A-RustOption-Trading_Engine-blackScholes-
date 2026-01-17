@@ -142,8 +142,9 @@ Software Engineering & Testing
 
 - Ken Youens-Clark. - Command-Line Rust (2024)
 - Beck, K - Test-Driven Deelopment: (foundational influence).
- 
+- I used DeepSeek / Gpt to debug some elements of the code - prompt these to explain some Mathematical concepts of Black-Scholes I did not understand at first for code veracity and rigour. 
 Disclaimer
+
 
 This project is for educational, my education as a Rust /API Security developer only.
 It is not intended for production trading or financial advice.
