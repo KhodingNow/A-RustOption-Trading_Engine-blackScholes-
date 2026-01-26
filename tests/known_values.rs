@@ -91,27 +91,35 @@ proptest! {
 proptest! {
 
     #[test]
-    fn put_price_respects_intrinsic_value_property(
+    fn european_put_respects_discounted_lower_bound(
+    
         spot in 50.0f64..150.0,
         strike in 50.0f64..150.0,
         
     ) {
+
+        let r = Rate(0.05);
+        let vol = Volatility(0.02);
+        let t = TimeToMaturity(1.0); 
+    
         let price = put_price(
 
             Spot(spot),
             Strike(strike),
-            Rate(0.01),
-            Volatility(0.2),
-            TimeToMaturity(1.0),
+            r,
+            vol,
+            t,
             
         );
 
-        let intrinsic_value = (strike - spot).max(0.0);
+        let discounted_strike = strike * (-r.0 * t.0).exp();
+        let lower_bound = (discounted_strike - spot).max(0.0);
+        
         let epsilon = 1e-8;
 
         prop_assert!(
-            price + epsilon >= intrinsic_value,
-            "put price {price} < intrinsic value {intrinsic_value}"
+            price + epsilon >= lower_bound,
+            "put price {price} < European lower bound {lower_bound}"
             
          );
         

@@ -1,6 +1,8 @@
 use statrs::distribution::{Normal, ContinuousCDF};
 use crate::types::*;
 
+
+
 pub fn call_price(
     spot: Spot,
     strike: Strike,
@@ -21,12 +23,10 @@ pub fn call_price(
 
     let d2 = d1 - sigma * t.sqrt();
 
-    s * normal.cdf(d1) - k * (-r * t).exp() * normal.cdf(d2);
+    
+    s * normal.cdf(d1) - k * (-r * t).exp() * normal.cdf(d2)
 
-    k * (-r * t).exp() * normal.cdf(-d2) - s * normal.cdf(-d1)
-  
-  
-  // This is the Black-Scholes standart put formula  
+      
 }
 
 pub fn put_price(
@@ -110,14 +110,17 @@ fn call_price_is_never_below_intrinsic_value() {
         
     );
     
-    let intrinsic_value = (spot.0 - strike.0).max(0.0);
+    let intrinsic_value = (strike.0 - spot.0).max(0.0);
     
     assert!(
         price >= intrinsic_value,
 
         "price {price} < intrinsic value {intrinsic_value }"
-        
-    );
+
+
+); 
+       
+   
+
      
 }
-
